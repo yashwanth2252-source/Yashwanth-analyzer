@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prank Resistance Analyzer 💫</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #ff9a9e, #a18cd1);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  overflow: hidden;
+}
+
+.container {
+  width: 90%;
+  max-width: 400px;
+  padding: 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.1);
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255,255,255,0.2);
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #ff6ec4, #7873f5);
+  color: white;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+input {
+  padding: 12px;
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.fade {
+  animation: fade 0.5s ease;
+}
+
+@keyframes fade {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+.progress {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #fff;
+  border-radius: 10px;
+  transition: width 0.4s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+
+<!-- Welcome -->
+<div id="welcome" class="fade">
+  <h2>Welcome to the Prank Resistance Analyzer 😏</h2>
+  <p>Let’s see how smart, charming, and unprankable you really are…</p>
+  <button onclick="start()">Start Test 💖</button>
+</div>
+
+<!-- Name -->
+<div id="nameScreen" class="hidden fade">
+  <h3>First, tell me your beautiful name… ✨</h3>
+  <input type="text" id="nameInput" placeholder="Enter name">
+  <button onclick="saveName()">Continue</button>
+  <p id="nameMsg"></p>
+</div>
+
+<!-- Questions -->
+<div id="questionScreen" class="hidden fade">
+  <h3 id="question"></h3>
+  <div id="options"></div>
+  <p id="compliment"></p>
+</div>
+
+<!-- Loading -->
+<div id="loading" class="hidden fade">
+  <h3>Analyzing your charm…</h3>
+  <p id="loadingText">Scanning intelligence…</p>
+  <div class="progress">
+    <div class="progress-bar" id="bar"></div>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="result" class="hidden fade">
+  <h2>✨ FINAL RESULT ✨</h2>
+  <p id="resultText"></p>
+  <h1 id="prank" class="hidden">HAPPY APRIL FOOLS 😂🎉</h1>
+  <p id="finalLine"></p>
+  <button onclick="restart()">Restart 😏</button>
+</div>
+
+</div>
+
+<script>
+let name = "";
+let qIndex = 0;
+
+const questions = [
+{
+q: "If someone stares at you for 5 seconds, what do you do?",
+a: ["Stare back 😎","Smile softly 😊","Ignore like a queen 👑"],
+c: ["That confidence... dangerous 😌","That smile? lethal 💘","Royal attitude detected 👑"]
+},
+{
+q: "What’s your secret weapon?",
+a: ["Eyes 👀","Smile 😊","Attitude 🔥"],
+c: ["Those eyes... trouble 😏","That smile wins hearts 💖","Attitude? irresistible 🔥"]
+},
+{
+q: "If I tried to prank you?",
+a: ["Catch instantly 😏","Maybe 😶","Depends 😉"],
+c: ["Too smart huh 😌","Interesting... risky 😏","Now that’s intriguing 😈"]
+},
+{
+q: "Pick your vibe",
+a: ["Cute 🐣","Bold 🔥","Mystery 🌙"],
+c: ["Cute but powerful 💕","Bold & stunning 😌","Mysterious charm ✨"]
+},
+{
+q: "When complimented?",
+a: ["Blush ☺️","Say thanks 😌","Tease 😜"],
+c: ["That blush says everything 💖","Confidence looks good on you 😏","Playful huh 😜"]
+}
+];
+
+function start(){
+document.getElementById("welcome").classList.add("hidden");
+document.getElementById("nameScreen").classList.remove("hidden");
+}
+
+function saveName(){
+name = document.getElementById("nameInput").value;
+if(name==="") return;
+
+document.getElementById("nameMsg").innerText =
+`Hmm… ${name}, your name is as beautiful as you are, cutie 💕`;
+
+setTimeout(()=>{
+document.getElementById("nameScreen").classList.add("hidden");
+document.getElementById("questionScreen").classList.remove("hidden");
+showQuestion();
+},1500);
+}
+
+function showQuestion(){
+let q = questions[qIndex];
+document.getElementById("question").innerText = q.q;
+let optionsHTML = "";
+
+q.a.forEach((opt,i)=>{
+optionsHTML += `<button onclick="answer(${i})">${opt}</button><br>`;
+});
+
+document.getElementById("options").innerHTML = optionsHTML;
+document.getElementById("compliment").innerText = "";
+}
+
+function answer(i){
+let q = questions[qIndex];
+document.getElementById("compliment").innerText = q.c[i];
+
+setTimeout(()=>{
+qIndex++;
+if(qIndex < questions.length){
+showQuestion();
+}else{
+showLoading();
+}
+},1200);
+}
+
+function showLoading(){
+document.getElementById("questionScreen").classList.add("hidden");
+document.getElementById("loading").classList.remove("hidden");
+
+let steps = [
+"Scanning intelligence…",
+"Measuring charm levels…",
+"Checking prank resistance…"
+];
+
+let i=0;
+let width=0;
+
+let interval = setInterval(()=>{
+document.getElementById("loadingText").innerText = steps[i%3];
+width += 20;
+document.getElementById("bar").style.width = width+"%";
+i++;
+
+if(width>=100){
+clearInterval(interval);
+showResult();
+}
+},700);
+}
+
+function showResult(){
+document.getElementById("loading").classList.add("hidden");
+document.getElementById("result").classList.remove("hidden");
+
+let text = `${name}, you are incredibly smart, charming, and almost impossible to prank… 😌 Honestly, I was impressed the whole time…`;
+
+document.getElementById("resultText").innerText = text;
+
+setTimeout(()=>{
+document.getElementById("prank").classList.remove("hidden");
+document.getElementById("finalLine").innerText =
+"Don’t worry… even smart and beautiful girls like you fall for the best pranks 😉💖";
+},2000);
+}
+
+function restart(){
+location.reload();
+}
+</script>
+
+</body>
+</html>
